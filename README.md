@@ -14,18 +14,19 @@ Install [truffle](https://github.com/consensys/truffle):
 $ npm install -g truffle 
 ```
 
-Check if you have `solc`:      
+Install [webpack](https://webpack.github.io/):
+```
+$ npm install -g webpack
+```
+
+(OPTIONAL - this takes a while and is not necessary for the rest of the tutorial)       
+Check if you have [solc](https://github.com/ethereum/go-ethereum/wiki/Contract-Tutorial#using-an-online-compiler):      
 ```
 $ which solc
 $ brew tap ethereum/ethereum
 $ brew install solidity
 ```
-If you don't have solc you can get it [here](https://github.com/ethereum/go-ethereum/wiki/Contract-Tutorial#using-an-online-compiler)
 
-Install [webpack](https://webpack.github.io/):
-```
-$ npm install -g webpack
-```
 ### Run
 
 Run testrpc in one console window:
