@@ -90,10 +90,10 @@ window.App = {
         status.innerHTML = message;
     },
 
-    guessNumber: function () {
+    guessNumber: function (amount) {
         var self = this;
 
-        var amount = parseInt(document.getElementById("amount").value);
+        // var amount = parseInt(document.getElementById("amount").value);
 
         this.setStatus("Initiating transaction... (please wait)");
 

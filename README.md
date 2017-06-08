@@ -14,6 +14,12 @@ Install [truffle](https://github.com/consensys/truffle):
 $ npm install -g truffle 
 ```
 
+Check if you have `solc`:      
+```
+$ which solc
+$ brew tap ethereum/ethereum
+$ brew install solidity
+```
 If you don't have solc you can get it [here](https://github.com/ethereum/go-ethereum/wiki/Contract-Tutorial#using-an-online-compiler)
 
 Install [webpack](https://webpack.github.io/):
