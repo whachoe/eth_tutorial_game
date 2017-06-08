@@ -33,5 +33,6 @@ In another console window run truffle from project root directory:
 $ truffle compile
 $ truffle migrate
 $ truffle test
-$ truffle serve // server at localhost:8080
+$ npm run dev
+$ OR: truffle serve // server at localhost:8080
 ```

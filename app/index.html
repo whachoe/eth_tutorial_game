@@ -8,15 +8,21 @@
 <body>
 <h1>Guess</h1>
 <h2>Ethereum Dapp DEMO</h2>
-<h3>You have <span class="black"><span id="balance"></span> Wei</span></h3>
+<div class="info">
+    Guess the secret number in the Ethereum contract and you will receive double your stake.<br/>
+    Each guess costs <b>1</b> ETH.
+</div>
+<h3>Money in the bank: <br/><span class="black"><span id="bank"></span> Wei</span></h3>
+<h3>You have <br/><span class="black"><span id="balance"></span> Wei</span></h3>
 
-<br>
-<h1>Guess a number:</h1>
+<br/>
+<h1>Guess the number:</h1>
+<br><label for="address">Your ETH address:</label><input type="text" id="address"></body>
 <br><label for="amount">Number:</label><input type="text" id="amount" placeholder="e.g., 95"></input>
 <br><br><button id="send" onclick="App.guessNumber()">GO!</button>
 <br><br>
 <span id="status"></span>
-<br>
+<br><br/><br/><br/>
 <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
 </body>
 </html>

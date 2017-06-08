@@ -16,6 +16,7 @@ var DiceGame = contract(dicegame_artifacts);
 // For application bootstrapping, check out window.addEventListener below.
 var accounts;
 var account;
+var owner;
 var bidAmount;
 
 window.App = {
@@ -39,10 +40,15 @@ window.App = {
             }
 
             accounts = accs;
+            owner = accounts[0];
             account = accounts[1];
 
+            document.getElementById('address').value = account;
+            self.tipOff();
             self.getBalance();
+            self.getMoneyInTheBank();
         });
+
 
         // Events
         DiceGame.deployed().then(function (instance) {
@@ -63,6 +69,22 @@ window.App = {
         });
     },
 
+    tipOff: function () {
+        DiceGame.deployed().then(function (instance) {
+            var balance = web3.eth.getBalance(instance.address).toNumber();
+            if (balance < web3.toWei(2, 'ether')) {
+                instance.send(web3.toWei(5, 'ether'), {from: owner});
+            }
+        });
+    },
+
+    getMoneyInTheBank: function () {
+        DiceGame.deployed().then(function (instance) {
+            var balance = web3.eth.getBalance(instance.address).toNumber();
+            document.getElementById('bank').innerHTML = balance;
+        });
+    },
+
     setStatus: function (message) {
         var status = document.getElementById("status");
         status.innerHTML = message;
@@ -78,8 +100,9 @@ window.App = {
         var dicegame;
         DiceGame.deployed().then(function (instance) {
             dicegame = instance;
-            return dicegame.guessNumber(amount, {from: account, value: bidAmount});
+            return dicegame.guessNumber(amount, {from: document.getElementById('address').value, value: bidAmount});
         }).then(function () {
+            self.getMoneyInTheBank();
             self.getBalance();
         }).catch(function (e) {
             console.log(e);
@@ -88,7 +111,7 @@ window.App = {
     },
 
     getBalance: function () {
-        var account2InitialBalance = web3.eth.getBalance(account).toNumber();
+        var account2InitialBalance = web3.eth.getBalance(document.getElementById('address').value).toNumber();
         document.getElementById("balance").innerHTML = account2InitialBalance;
         return account2InitialBalance;
     }
