@@ -15,6 +15,8 @@ contract DiceGame {
     }
 
     event GuessedNumber(address _from, uint _number);
+    event Lose(address _from, uint _number);
+    event Win(address _from, uint _number);
 
     function DiceGame()
     {
@@ -48,13 +50,13 @@ contract DiceGame {
 
         players[msg.sender] = guess;
 
-        // Raise event
-        GuessedNumber(msg.sender, guess);
-
         if (guess == daNumber) {
             if (this.balance >= minimumBet*2) {
                 msg.sender.transfer(minimumBet*2);
             }
+
+            // Raise event
+            Win(msg.sender, guess);
 
             reset();
             return true;
@@ -64,6 +66,8 @@ contract DiceGame {
             if (this.balance > 1 wei) {
                 msg.sender.transfer(1 wei);
             }
+
+            Lose(msg.sender, guess);
             return true;
         }
 
@@ -71,6 +75,8 @@ contract DiceGame {
             if (this.balance > 2 wei) {
                 msg.sender.transfer(2 wei);
             }
+
+            Lose(msg.sender, guess);
             return true;
         }
 

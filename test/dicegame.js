@@ -22,7 +22,7 @@ contract('DiceGame', function (accounts) {
                 console.log("Ether in account2: ", fromWei(account2InitialBalance, 'ether'));
 
                 return ourInstance.send(toWei(5, 'ether')); // make sure we have some money in the bank
-            }).then(function(result) {
+            }).then(function (result) {
                 var initialBalance = web3.eth.getBalance(ourInstance.address).toNumber();
                 assert.equal(initialBalance, toWei(5, 'ether'), 'We should have 5 ether in the bank');
                 return ourInstance.minimumBet.call();
@@ -42,10 +42,10 @@ contract('DiceGame', function (accounts) {
                 assert.isAbove(account2NewBalance, account2InitialBalance, 'Account2 should have more money now');
                 // console.log(guessnumber.logs);
                 assert.lengthOf(guessnumber.logs, 1, 'We should have 1 log now');
-            }).then(function() {
-
-            })
-
-            ;
+                assert.equal(guessnumber.logs[0].event, 'Win', 'We should have 1 WIN log');
+            });
     });
+
+    it('Should pay less when guessing wrong');
+    it('Should pay balance to owner when destroying the contract');
 });
