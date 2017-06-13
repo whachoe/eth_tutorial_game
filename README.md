@@ -37,6 +37,7 @@ $ testrpc
 In another console window run truffle from project root directory:
 
 ```
+$ npm install
 $ truffle compile
 $ truffle migrate
 $ truffle test

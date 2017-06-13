@@ -82,6 +82,7 @@ window.App = {
         DiceGame.deployed().then(function (instance) {
             var balance = web3.eth.getBalance(instance.address).toNumber();
             document.getElementById('bank').innerHTML = balance;
+            document.getElementById('bankEth').innerHTML = web3.fromWei(balance, 'ether');
         });
     },
 
@@ -113,6 +114,7 @@ window.App = {
     getBalance: function () {
         var account2InitialBalance = web3.eth.getBalance(document.getElementById('address').value).toNumber();
         document.getElementById("balance").innerHTML = account2InitialBalance;
+        document.getElementById('balanceEth').innerHTML = web3.fromWei(account2InitialBalance, 'ether');
         return account2InitialBalance;
     }
 };
