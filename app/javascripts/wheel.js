@@ -35,6 +35,7 @@
             var a, b, c;
             clearTimeout(d.spinTimeout), a = 180 * d.startAngle / Math.PI + 90, b = 180 * d.arc / Math.PI, c = Math.floor((360 - a % 360) / b), e.save(), g.done(d.members[c])
         }, this.done = function (a) {
+            g.cb(a)
         }, {init: g.draw, spin: g.spin}
     };
     window.Wheel = window.Wheel || b

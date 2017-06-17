@@ -28,70 +28,77 @@ window.App = {
         // Bootstrap the DiceGame abstraction for Use.
         DiceGame.setProvider(web3.currentProvider);
 
-        if (account)
+        if (web3.isAddress(account))
             document.getElementById('address').value = account;
 
         document.getElementById('address').addEventListener('change', function (event) {
-            account = document.getElementById('address').value;
-            self.getBalance();
+            if (web3.isAddress(document.getElementById('address').value)) {
+                account = document.getElementById('address').value;
+                self.getBalance();
+            }
         });
 
         // Make new contract and hook in the event-listeners
         DiceGame.deployed().then((instance) => {
             ourInstance = instance;
-            instance.owner.call().then ((error, result) => {
-                owner = result;
-            }).then(function () {
-                instance.Win({}, {fromBlock:'latest', toBlock:'latest'}).watch((error, log) => {
-                    console.log(error, log);
-                    self.setStatus("You guessed RIGHT. More money in the BANK!");
-                });
+            // Setting up the event-handling
+            var events = instance.allEvents({}, function (error, log) {
+                if (error) {
+                    console.log("Error: " + error);
+                } else {
+                    console.log(log);
 
-                instance.Lose({}, {fromBlock:'latest', toBlock:'latest'}).watch(function (error, log) {
-                    console.log(error, log);
-                    self.setStatus("Too bad. Please try again");
-                });
+                    if (log.event == 'Lose') {
+                        self.setStatus("Too bad. Please try again");
+                    }
 
-                self.getMoneyInTheBank();
-                self.getBalance();
+                    if (log.event == 'Win') {
+                        self.setStatus("You guessed RIGHT. More money in the BANK!");
+                    }
+                }
             });
+
+            self.getMoneyInTheBank();
+            self.getBalance();
         });
     },
 
-    // // Send money from the owner to the contract.
-    // // This logic should be sitting in a contract and not in the frontend. But #famouslylazyjo is still a thing
-    // tipOff: function () {
-    //     web3.eth.getBalance(ourInstance.address, function (error, balance) {
-    //         if (balance.toNumber() < web3.toWei(2, 'ether')) {
-    //             ourInstance.send(web3.toWei(5, "ether")).then(function (result) {
-    //             });
-    //         }
-    //     });
-    // },
+// // Send money from the owner to the contract.
+// // This logic should be sitting in a contract and not in the frontend. But #famouslylazyjo is still a thing
+// tipOff: function () {
+//     web3.eth.getBalance(ourInstance.address, function (error, balance) {
+//         if (balance.toNumber() < web3.toWei(2, 'ether')) {
+//             ourInstance.send(web3.toWei(5, "ether")).then(function (result) {
+//             });
+//         }
+//     });
+// },
 
-// Let's see how many money the contract has and print it
+    // Let's see how many money the contract has and print it
     getMoneyInTheBank: function () {
         web3.eth.getBalance(ourInstance.address, function (error, balance) {
             console.log(error, balance);
             document.getElementById('bank').innerHTML = balance.toNumber();
             document.getElementById('bankEth').innerHTML = web3.fromWei(balance, 'ether');
         });
-    },
+    }
+    ,
 
-// Print message to screen after spinning the wheel
+    // Print message to screen after spinning the wheel
     setStatus: function (message) {
         var status = document.getElementById("status");
         status.innerHTML = message;
-    },
+    }
+    ,
 
-// Call the contract with a certain number
+    // Call the contract with a certain number
     guessNumber: function (wheelNumber) {
         var self = this;
 
         this.setStatus("Initiating transaction... (please wait)");
 
         ourInstance.guessNumber(wheelNumber, {
-            from: document.getElementById('address').value,
+            from: account,
             value: bidAmount
         }).then(function () {
             self.getMoneyInTheBank();
@@ -100,18 +107,28 @@ window.App = {
             console.log(e);
             self.setStatus("Error sending guess. See logs");
         });
-    },
+    }
+    ,
 
     getBalance: function () {
-        web3.eth.getBalance(document.getElementById('address').value, function (error, balance) {
+        var inputaddress = document.getElementById('address').value;
+        if (web3.isAddress(inputaddress)) {
+            web3.eth.getBalance(inputaddress, function (error, balance) {
 
-            document.getElementById("balance").innerHTML = balance.toNumber();
-            document.getElementById('balanceEth').innerHTML = web3.fromWei(balance.toNumber(), 'ether');
+                // Enable the send-button if there's enough money in the account
+                if (balance >= web3.toWei(1, 'ether'))
+                    document.getElementById('send').disabled = '';
 
-            return balance;
-        });
+                // Print the balance of the account in Wei and Ether
+                document.getElementById("balance").innerHTML = balance.toNumber();
+                document.getElementById('balanceEth').innerHTML = web3.fromWei(balance.toNumber(), 'ether');
+
+                return balance;
+            });
+        }
     }
-};
+}
+;
 
 // Load the correct Web3 instance: Either locally (tesrpc) or through the Mist/Metamask browser plugin
 window.addEventListener('load', function () {
