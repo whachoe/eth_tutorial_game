@@ -44,7 +44,7 @@ window.App = {
             account = accounts[1];
 
             document.getElementById('address').value = account;
-            self.tipOff();
+            // self.tipOff();
             self.getBalance();
             self.getMoneyInTheBank();
         });
@@ -57,6 +57,8 @@ window.App = {
                 if (error) {
                     console.log("Error: " + error);
                 } else {
+                    console.log(log);
+
                     if (log.event == 'Lose') {
                         self.setStatus("Too bad. Please try again");
                     }
@@ -69,6 +71,7 @@ window.App = {
         });
     },
 
+    // This should not be in a production build. It should be handled by the contract or by an external script
     tipOff: function () {
         DiceGame.deployed().then(function (instance) {
             var balance = web3.eth.getBalance(instance.address).toNumber();
