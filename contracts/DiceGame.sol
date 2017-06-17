@@ -51,32 +51,34 @@ contract DiceGame {
         players[msg.sender] = guess;
 
         if (guess == daNumber) {
+            // Raise event
+            Win(msg.sender, guess);
+
             if (this.balance >= minimumBet*2) {
                 msg.sender.transfer(minimumBet*2);
             }
-
-            // Raise event
-            Win(msg.sender, guess);
 
             reset();
             return true;
         }
 
         if (guess < daNumber) {
+            Lose(msg.sender, guess);
+
             if (this.balance > 1 wei) {
                 msg.sender.transfer(1 wei);
             }
 
-            Lose(msg.sender, guess);
             return true;
         }
 
         if (guess > daNumber) {
+            Lose(msg.sender, guess);
+
             if (this.balance > 2 wei) {
                 msg.sender.transfer(2 wei);
             }
 
-            Lose(msg.sender, guess);
             return true;
         }
 
